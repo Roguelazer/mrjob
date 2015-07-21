@@ -182,7 +182,6 @@ class S3Filesystem(Filesystem):
 
     def rm(self, path_glob):
         """Remove all files matching the given glob."""
-        s3_conn = self.make_s3_conn()
         for uri in self.ls(path_glob):
             key = self.get_s3_key(uri)
             if key:
@@ -240,9 +239,10 @@ class S3Filesystem(Filesystem):
         location = bucket.get_location()
 
         # connect to bucket on proper endpoint
-        if (not self._s3_endpoint and
-            s3_endpoint_for_region(location) != s3_conn.host):
-
+        if (
+            not self._s3_endpoint and
+            s3_endpoint_for_region(location) != s3_conn.host
+        ):
             s3_conn = self.make_s3_conn(location)
             bucket = s3_conn.get_bucket(bucket_name)
 
